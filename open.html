@@ -2,67 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Opening Instant Yatra...</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: #F8FAFC;
-      color: #0F172A;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 24px;
-      text-align: center;
-    }
-    .box {
-      background: white;
-      padding: 32px 24px;
-      border-radius: 16px;
-      max-width: 360px;
-      width: 100%;
-      border: 1px solid #E2E8F0;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    }
-    .btn {
-      display: block;
-      margin-top: 20px;
-      padding: 14px 20px;
-      background: #1E40AF;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 10px;
-    }
-  </style>
+  <meta http-equiv="refresh" content="0; url=index.html">
+  <title>Instant Yatra</title>
+  <script>
+    window.location.replace("index.html");
+  </script>
 </head>
 <body>
-  <div class="box">
-    <h2>Redirecting to Instant Yatra...</h2>
-    <p style="color: #64748B; font-size: 14px; margin-top: 8px;">Please tap below if the app did not open automatically.</p>
-    <a id="openBtn" class="btn">🚀 OPEN INSTANT YATRA</a>
-  </div>
-
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const chatId = params.get('chat_id') || '';
-    const name = params.get('name') || '';
-
-    const intentUrl = `intent://telegram?chat_id=${chatId}&name=${encodeURIComponent(name)}#Intent;scheme=instantyatra;package=com.garudadev.instant_yatra;end`;
-    const schemeUrl = `instantyatra://telegram?chat_id=${chatId}&name=${encodeURIComponent(name)}`;
-
-    const openBtn = document.getElementById('openBtn');
-    openBtn.href = intentUrl;
-
-    // Auto-trigger intent
-    window.location.href = intentUrl;
-
-    // Fallback scheme after 1s
-    setTimeout(() => {
-      window.location.href = schemeUrl;
-    }, 1000);
-  </script>
 </body>
 </html>
