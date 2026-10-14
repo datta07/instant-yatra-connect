@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Instant Yatra - Telegram Connect</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background: #F8FAFC;
+      color: #0F172A;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      text-align: center;
+    }
+    .card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+      border: 1px solid #E2E8F0;
+    }
+    .logo-badge {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+      color: white;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 16px -4px rgba(30, 64, 175, 0.3);
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 8px;
+    }
+    p.subtitle {
+      font-size: 13px;
+      color: #64748B;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+    .user-box {
+      background: #F1F5F9;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    .user-box .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #64748B;
+      margin-bottom: 4px;
+    }
+    .user-box .val {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1E40AF;
+      word-break: break-all;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      background: #1E40AF;
+      color: #FFFFFF;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
+      transition: all 0.2s ease;
+    }
+    .btn:active {
+      transform: scale(0.98);
+      background: #1E3A8A;
+    }
+    .badge-copied {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      border-radius: 10px;
+      font-size: 12px;
+      color: #065F46;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .fallback-note {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #94A3B8;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo-badge">🚆</div>
+    <h1>Instant Yatra Alerts</h1>
+    <p class="subtitle">Connect your Telegram account to receive private, real-time train seat availability notifications.</p>
+
+    <div class="user-box">
+      <div class="label">Your Telegram Account</div>
+      <div class="val" id="userName">Detecting...</div>
+      <div style="font-size: 12px; color: #64748B; margin-top: 4px;" id="userIdLine"></div>
+    </div>
+
+    <button id="connectBtn" class="btn">🔗 CONNECT TO APP</button>
+
+    <div id="copiedBadge" class="badge-copied">
+      ✅ <b>Chat ID Copied to Clipboard!</b><br>
+      Opening Instant Yatra... If not redirected, switch back to the app — it will auto-detect your ID!
+    </div>
+
+    <p class="fallback-note">Safe & Private • Alerts are sent only to you</p>
+  </div>
+
+  <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+
+    const user = tg?.initDataUnsafe?.user;
+    let chatId = user?.id || "";
+    let firstName = user?.first_name || "Traveler";
+    let username = user?.username ? `@${user.username}` : "";
+
+    const userNameEl = document.getElementById("userName");
+    const userIdLineEl = document.getElementById("userIdLine");
+    const connectBtn = document.getElementById("connectBtn");
+    const copiedBadge = document.getElementById("copiedBadge");
+
+    if (chatId) {
+      userNameEl.innerText = `${firstName} ${username}`.trim();
+      userIdLineEl.innerText = `Chat ID: ${chatId}`;
+    } else {
+      userNameEl.innerText = "Telegram User";
+      userIdLineEl.innerText = "Please open inside Telegram";
+      chatId = "";
+    }
+
+    connectBtn.addEventListener("click", async () => {
+      if (!chatId) {
+        alert("Could not detect Telegram User ID. Please open inside Telegram.");
+        return;
+      }
+
+      // 1. Copy to clipboard
+      try {
+        await navigator.clipboard.writeText(String(chatId));
+      } catch (e) {
+        console.error("Clipboard copy failed:", e);
+      }
+
+      copiedBadge.style.display = "block";
+      connectBtn.innerText = "✅ OPENING APP...";
+      connectBtn.style.background = "#059669";
+
+      const deepLink = `instantyatra://telegram?chat_id=${chatId}&name=${encodeURIComponent(firstName)}`;
+      const fallbackUrl = `https://datta07.github.io/instant-yatra-connect/open.html?chat_id=${chatId}&name=${encodeURIComponent(firstName)}`;
+
+      // 2. Try direct scheme first
+      window.location.href = deepLink;
+
+      // 3. Hand off via external link so browser will trigger Android Intent if Telegram blocks custom schemes
+      setTimeout(() => {
+        if (tg && tg.openLink) {
+          tg.openLink(fallbackUrl);
+        } else {
+          window.location.href = fallbackUrl;
+        }
+      }, 700);
+    });
+  </script>
+</body>
+</html>
