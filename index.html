@@ -178,23 +178,15 @@
       }
 
       copiedBadge.style.display = "block";
-      connectBtn.innerText = "✅ OPENING APP...";
+      connectBtn.innerText = "✅ COPIED! SWITCH TO APP";
       connectBtn.style.background = "#059669";
 
-      const deepLink = `instantyatra://telegram?chat_id=${chatId}&name=${encodeURIComponent(firstName)}`;
-      const fallbackUrl = `https://datta07.github.io/instant-yatra-connect/open.html?chat_id=${chatId}&name=${encodeURIComponent(firstName)}`;
-
-      // 2. Try direct scheme first
-      window.location.href = deepLink;
-
-      // 3. Hand off via external link so browser will trigger Android Intent if Telegram blocks custom schemes
+      // Smoothly close the Mini-App after 1.5s
       setTimeout(() => {
-        if (tg && tg.openLink) {
-          tg.openLink(fallbackUrl);
-        } else {
-          window.location.href = fallbackUrl;
+        if (tg && tg.close) {
+          tg.close();
         }
-      }, 700);
+      }, 1500);
     });
   </script>
 </body>
