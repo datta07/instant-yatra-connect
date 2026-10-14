@@ -177,7 +177,7 @@
         return;
       }
 
-      // Copy to clipboard
+      // 1. Copy to clipboard (guaranteed fallback)
       try {
         await navigator.clipboard.writeText(String(chatId));
       } catch (e) {
@@ -185,15 +185,27 @@
       }
 
       copiedBadge.style.display = "block";
-      connectBtn.innerText = "✅ CONNECTED! GO TO APP";
+      connectBtn.innerText = "🚀 OPENING INSTANT YATRA...";
       connectBtn.style.background = "#059669";
 
-      // Smoothly close the Mini-App after 1.2s
+      // 2. Trigger automated app switch via openLink
+      const openUrl = `https://datta07.github.io/instant-yatra-connect/open.html?chat_id=${chatId}&name=${encodeURIComponent(firstName)}`;
+      try {
+        if (tg && tg.openLink) {
+          tg.openLink(openUrl);
+        } else {
+          window.location.href = openUrl;
+        }
+      } catch (err) {
+        console.error("Open link failed:", err);
+      }
+
+      // 3. Smoothly close the Mini-App after 1s
       setTimeout(() => {
         if (tg && tg.close) {
           tg.close();
         }
-      }, 1200);
+      }, 1000);
     });
   </script>
 </body>
