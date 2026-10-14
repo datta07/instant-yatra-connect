@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Instant Yatra - Telegram Connect</title>
+  <title>Instant Yatra - Connect Telegram</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * {
@@ -20,34 +20,34 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      padding: 24px;
+      padding: 20px;
       text-align: center;
     }
     .card {
       background: #FFFFFF;
-      border-radius: 20px;
+      border-radius: 24px;
       padding: 32px 24px;
       width: 100%;
       max-width: 360px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+      box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
       border: 1px solid #E2E8F0;
     }
     .logo-badge {
-      width: 64px;
-      height: 64px;
+      width: 68px;
+      height: 68px;
       background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
       color: white;
-      border-radius: 18px;
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
-      margin: 0 auto 20px;
-      box-shadow: 0 8px 16px -4px rgba(30, 64, 175, 0.3);
+      font-size: 34px;
+      margin: 0 auto 18px;
+      box-shadow: 0 8px 20px -4px rgba(30, 64, 175, 0.35);
     }
     h1 {
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 800;
       color: #0F172A;
       margin-bottom: 8px;
     }
@@ -55,14 +55,15 @@
       font-size: 13px;
       color: #64748B;
       line-height: 1.5;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
     .user-box {
       background: #F1F5F9;
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 24px;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 22px;
       text-align: left;
+      border: 1px solid #E2E8F0;
     }
     .user-box .label {
       font-size: 11px;
@@ -78,19 +79,28 @@
       color: #1E40AF;
       word-break: break-all;
     }
+    .user-box .subtext {
+      font-size: 11px;
+      color: #059669;
+      font-weight: 600;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
     .btn {
       display: block;
       width: 100%;
       background: #1E40AF;
       color: #FFFFFF;
       padding: 16px 20px;
-      border-radius: 12px;
-      font-size: 15px;
+      border-radius: 14px;
+      font-size: 16px;
       font-weight: 700;
       text-decoration: none;
       border: none;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
+      box-shadow: 0 4px 14px rgba(30, 64, 175, 0.28);
       transition: all 0.2s ease;
     }
     .btn:active {
@@ -99,12 +109,12 @@
     }
     .badge-copied {
       display: none;
-      margin-top: 16px;
-      padding: 12px;
+      margin-top: 18px;
+      padding: 14px;
       background: #ECFDF5;
       border: 1px solid #A7F3D0;
-      border-radius: 10px;
-      font-size: 12px;
+      border-radius: 12px;
+      font-size: 13px;
       color: #065F46;
       font-weight: 600;
       line-height: 1.4;
@@ -113,6 +123,7 @@
       margin-top: 20px;
       font-size: 12px;
       color: #94A3B8;
+      font-weight: 500;
     }
   </style>
 </head>
@@ -120,22 +131,22 @@
   <div class="card">
     <div class="logo-badge">🚆</div>
     <h1>Instant Yatra Alerts</h1>
-    <p class="subtitle">Connect your Telegram account to receive private, real-time train seat availability notifications.</p>
+    <p class="subtitle">Get notified the second a confirmed train seat opens up for you!</p>
 
     <div class="user-box">
-      <div class="label">Your Telegram Account</div>
+      <div class="label">Connecting to:</div>
       <div class="val" id="userName">Detecting...</div>
-      <div style="font-size: 12px; color: #64748B; margin-top: 4px;" id="userIdLine"></div>
+      <div class="subtext">🔒 Private alerts sent only to you</div>
     </div>
 
-    <button id="connectBtn" class="btn">🔗 CONNECT TO APP</button>
+    <button id="connectBtn" class="btn">👉 Tap to Connect (1-Tap)</button>
 
     <div id="copiedBadge" class="badge-copied">
-      ✅ <b>Chat ID Copied to Clipboard!</b><br>
-      Opening Instant Yatra... If not redirected, switch back to the app — it will auto-detect your ID!
+      🎉 <b>You're all set!</b><br>
+      Switch back to Instant Yatra app to see your seat alerts.
     </div>
 
-    <p class="fallback-note">Safe & Private • Alerts are sent only to you</p>
+    <p class="fallback-note">100% Free • No spam • Direct alerts</p>
   </div>
 
   <script>
@@ -151,26 +162,22 @@
     let username = user?.username ? `@${user.username}` : "";
 
     const userNameEl = document.getElementById("userName");
-    const userIdLineEl = document.getElementById("userIdLine");
     const connectBtn = document.getElementById("connectBtn");
     const copiedBadge = document.getElementById("copiedBadge");
 
     if (chatId) {
       userNameEl.innerText = `${firstName} ${username}`.trim();
-      userIdLineEl.innerText = `Chat ID: ${chatId}`;
     } else {
       userNameEl.innerText = "Telegram User";
-      userIdLineEl.innerText = "Please open inside Telegram";
-      chatId = "";
     }
 
     connectBtn.addEventListener("click", async () => {
       if (!chatId) {
-        alert("Could not detect Telegram User ID. Please open inside Telegram.");
+        alert("Please open this page inside Telegram to connect.");
         return;
       }
 
-      // 1. Copy to clipboard
+      // Copy to clipboard
       try {
         await navigator.clipboard.writeText(String(chatId));
       } catch (e) {
@@ -178,15 +185,15 @@
       }
 
       copiedBadge.style.display = "block";
-      connectBtn.innerText = "✅ COPIED! SWITCH TO APP";
+      connectBtn.innerText = "✅ CONNECTED! GO TO APP";
       connectBtn.style.background = "#059669";
 
-      // Smoothly close the Mini-App after 1.5s
+      // Smoothly close the Mini-App after 1.2s
       setTimeout(() => {
         if (tg && tg.close) {
           tg.close();
         }
-      }, 1500);
+      }, 1200);
     });
   </script>
 </body>
